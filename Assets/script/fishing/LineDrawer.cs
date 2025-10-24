@@ -4,7 +4,14 @@ public class LineDrawer : MonoBehaviour
 {
     public GameObject startPoint; // Assign in Inspector
     public GameObject endPoint;   // Assign in Inspector
-    private LineRenderer lineRenderer;
+    LineRenderer lineRenderer;
+
+    GameObject stress_ball;
+    GameObject stress_ball_red;
+
+    hook_movement hook;
+
+    float alpha_level = 0;
 
     void Awake()
     {
@@ -14,6 +21,10 @@ public class LineDrawer : MonoBehaviour
             Debug.LogError("LineRenderer component not found on this GameObject!");
             enabled = false; // Disable script if no LineRenderer
         }
+
+        stress_ball = transform.Find("stress_ball").gameObject;
+        stress_ball_red = transform.Find("stress_ball_r").gameObject;
+        hook = GetComponent<hook_movement>();
     }
 
     void Update()
@@ -24,6 +35,9 @@ public class LineDrawer : MonoBehaviour
             lineRenderer.SetPosition(0, startPoint.transform.position);
             lineRenderer.SetPosition(1, endPoint.transform.position);
         }
+
+        ball_location();
+        ball_beeping();
     }
 
     public float get_distance()
@@ -36,5 +50,39 @@ public class LineDrawer : MonoBehaviour
     {
         Vector3 direction = startPoint.transform.position - endPoint.transform.position;
         return direction;
+    }
+
+    public void ball_beeping()
+    {
+        if (hook.stress_level <= (hook.get_reelStrength() * 10) / 100)
+        {
+            alpha_level = 0;
+        }
+        else if (hook.stress_level >= (hook.get_reelStrength() * 90) / 100)
+        {
+            alpha_level = 1;
+        }
+        else
+        {
+            float hook_strength = (hook.stress_level / hook.get_reelStrength()) * 100;
+            alpha_level = ((1.25f * hook_strength) - 12.5f) / 100;
+            print(alpha_level);
+        }
+
+        stress_ball_red.GetComponent<SpriteRenderer>().material.color = new Color(1.0f, 1.0f, 1.0f, alpha_level);
+    }
+
+    public void ball_location()
+    {
+        Vector3 ball_location = new Vector3(endPoint.transform.position.x, endPoint.transform.position.y, stress_ball.transform.position.z);
+        Vector3 ball_offset = get_direction().normalized;
+
+        ball_location.x += ball_offset.x;
+        ball_location.y += ball_offset.y;
+
+        Vector3 ball_location_r = new Vector3(ball_location.x, ball_location.y, stress_ball_red.transform.position.z);
+
+        stress_ball.transform.position = ball_location;
+        stress_ball_red.transform.position = ball_location_r;
     }
 }

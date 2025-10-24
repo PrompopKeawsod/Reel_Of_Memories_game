@@ -118,6 +118,8 @@ public class fish_basic : MonoBehaviour
                 fish_state = 0;
             }
 
+            StartCoroutine(chasing_bored());
+
             eat_bait();
         }
         else if (fish_state == 2)
@@ -127,8 +129,10 @@ public class fish_basic : MonoBehaviour
 
             Vector3 run_away_destination = new Vector3(new_x, transform.position.y, transform.position.z);
 
-            transform.position = Vector3.MoveTowards(transform.position, run_away_destination, 50f * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, run_away_destination, 40f * Time.deltaTime);
             change_fish_direction(run_away_destination);
+
+            Destroy(gameObject, 3f);
 
         }
         else if (fish_state == 3) { 
@@ -180,6 +184,17 @@ public class fish_basic : MonoBehaviour
             hook.fish_on_hook(this);
             fish_state = 3;
             transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+
+
+    }
+
+    IEnumerator chasing_bored()
+    {
+        yield return new WaitForSeconds(2);
+        if (hook.fish_caught == null)
+        {
+            fish_state = 1;
         }
     }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 public class cam_control : MonoBehaviour
 {
     public GameObject camera_look_at;
-    public float speed = 2f;
+    float speed = 2f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,5 +28,10 @@ public class cam_control : MonoBehaviour
     public void set_camera(GameObject obj)
     {
         camera_look_at = obj;
+    }
+
+    public void set_speed(float new_speed)
+    {
+        speed = new_speed;
     }
 }
