@@ -34,6 +34,7 @@ public class hook_movement : MonoBehaviour
     public bool bought_luxury = false;
     public bool bought_light = false;
     public bool bought_magnet = false;
+    public bool unlock_special = false;
 
     // fishing minigame
     public float push_down_force = 5f;
@@ -60,6 +61,9 @@ public class hook_movement : MonoBehaviour
 
     GameObject lure_sprite;
 
+    GameObject hook_sprite;
+    GameObject magnet_sprite;
+
     Vector3 original_location;
 
 
@@ -76,6 +80,10 @@ public class hook_movement : MonoBehaviour
         hook_location = transform.Find("line_point_end");
 
         lure_sprite = transform.Find("Lure_Modular").gameObject;
+
+        hook_sprite = transform.Find("Lure_Modular/Lure_body_0/Lure_hook").gameObject;
+
+        magnet_sprite = transform.Find("Lure_Modular/Lure_body_0/Lure_magnet").gameObject;
 
         original_location = transform.position;
 
@@ -209,6 +217,8 @@ public class hook_movement : MonoBehaviour
 
         stress_increment = stress_increment_base - (reelStrength_level - 1);
         pull_back_power = pull_back_power_base + (reelStrength_level - 1);
+
+        reelStrength_final = reelLength_base;
     }
 
     public void fish_positioning()
@@ -296,6 +306,17 @@ public class hook_movement : MonoBehaviour
         {
             lure_sprite.SetActive(false);
         }
+
+        if (magnet_on)
+        {
+            magnet_sprite.SetActive(true);
+            hook_sprite.SetActive(false);
+        }
+        else
+        {
+            magnet_sprite.SetActive(false);
+            hook_sprite.SetActive(true);
+        }
     }
 
     IEnumerator hook_wiggle()
@@ -333,5 +354,10 @@ public class hook_movement : MonoBehaviour
     public float get_reelStrength()
     {
         return reelStrength_final;
+    }
+
+    public float get_hookLength()
+    {
+        return reelLength_final;
     }
 }

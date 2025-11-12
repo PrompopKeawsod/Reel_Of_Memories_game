@@ -82,7 +82,6 @@ public class man_control : MonoBehaviour
 
         // set cam speed
 
-        print(dist);
         if (dist < 17)
         {
             dist = 17f;
